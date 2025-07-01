@@ -4,11 +4,17 @@ import cv2
 
 from PIL import Image
 from bot import Bot
-from config import screen_dim
 from threading import Thread
 
 customtkinter.set_appearance_mode("dark")
 customtkinter.set_default_color_theme("blue")
+
+screen_dim = {
+    'left': 0,
+    'top': 0,
+    'width': 1920,
+    'height': 1080
+}
 
 
 class Logger(customtkinter.CTkTextbox):
@@ -23,8 +29,7 @@ class Logger(customtkinter.CTkTextbox):
 
     def _write(self, *message):
         self.configure(state="normal")
-        self.insert("end", " ".join(map(lambda m: str(m), message)) + "\n")
-        self.yview_moveto(1.0)
+        self.insert("0.0", " ".join(map(lambda m: str(m), message)) + "\n")
         self.configure(state="disabled")
 
 
