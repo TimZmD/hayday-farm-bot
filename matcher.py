@@ -8,7 +8,10 @@ from math_utils import dist
 
 class Matcher:
 
-    def __init__(self, group_threshold=1, eps=0.2):
+    def __init__(self, group_threshold=0, eps=0.2):
+        # Use a group_threshold of 0 so grouping is disabled by default. This
+        # prevents nearby matches (e.g. adjacent empty fields) from being
+        # merged together by ``cv2.groupRectangles``.
         self.group_threshold = group_threshold
         self.eps = eps
 
