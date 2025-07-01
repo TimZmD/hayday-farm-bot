@@ -45,12 +45,26 @@ class Matcher:
             (right[0] + tolerance * 2, right[1]))
 
     def boundary_to_path(self, boundary, thickness=55):
+        """Return a list of points forming a harvesting path.
+
+        The previous implementation generated a zigzag pattern starting from
+        the top left corner. To harvest each field from top to bottom, the path
+        now consists of vertical lines across the field area. Each step moves
+        horizontally by ``thickness`` while dragging from the top towards the
+        bottom of the detected boundary.
+        """
         top, left, bottom, right = boundary
-        path = [top, left]
-        for i in range(1, math.ceil(dist(top, right) / thickness)):
+
+        # start with the first vertical line (top to bottom)
+        path = [top, bottom]
+
+        # number of vertical lines required to cover the whole area
+        steps = math.ceil(dist(left, right) / thickness)
+        for i in range(1, steps):
             ta = np.sqrt(thickness**2 / 5)
-            path.append((int(top[0] + 2*ta*i), int(top[1] + ta*i)))
-            path.append((int(left[0] + 2*ta*i), int(left[1] + ta*i)))
+            path.append((int(top[0] + 2 * ta * i), int(top[1] + ta * i)))
+            path.append((int(bottom[0] + 2 * ta * i), int(bottom[1] + ta * i)))
+
         return path
 
     def mark_matches(self, matches, target, color):
