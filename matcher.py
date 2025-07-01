@@ -3,7 +3,7 @@ import math
 import cv2
 import numpy as np
 
-from math import dist
+from math_utils import dist
 
 
 class Matcher:
