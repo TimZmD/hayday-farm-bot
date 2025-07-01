@@ -51,6 +51,13 @@ class Bot:
         self.silo_is_full = False
         self.harvested_plants = False
         self.planted_crops = 0
+        self.running = False
+
+    def start(self):
+        self.running = True
+
+    def stop(self):
+        self.running = False
 
     def get_target(self):
         screen_dim = {
@@ -281,7 +288,7 @@ class Bot:
         self.set_tracking_img(tracked)
 
     def bot_loop(self):
-        while True:
+        while self.running:
             screen = self.get_target()
 
             self.logger.log("Camera:", self.get_camera_pos())
@@ -325,3 +332,4 @@ class Bot:
             if keyboard.is_pressed('q'):
                 self.logger.log("Stopping...")
                 break
+        self.running = False

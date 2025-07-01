@@ -23,6 +23,11 @@ class Logger(customtkinter.CTkTextbox):
         self.grid(row=0, column=0, sticky="nsew")
 
     def log(self, *message):
+        # tkinter widgets must only be updated from the main thread.
+        # ``after`` schedules the write operation on the UI thread.
+        self.after(0, self._write, *message)
+
+    def _write(self, *message):
         self.configure(state="normal")
         self.insert("0.0", " ".join(map(lambda m: str(m), message)) + "\n")
         self.configure(state="disabled")
@@ -97,8 +102,12 @@ class App(customtkinter.CTk):
         self.stop_bot()
 
     def start_bot(self):
+        self.bot.start()
         self.bot_thread = Thread(target=self.bot.bot_loop)
         self.bot_thread.start()
 
     def stop_bot(self):
-        self.bot_thread = None
+        if self.bot_thread is not None:
+            self.bot.stop()
+            self.bot_thread.join()
+            self.bot_thread = None
