@@ -6,6 +6,8 @@ import numpy as np
 import mss
 import keyboard
 import pyautogui as pa
+import os
+from config import screen_dim
 
 pa.PAUSE = 0
 
@@ -27,20 +29,22 @@ CLOSE_MATCHING_THRESHOLD = 0.4
 BOAT_ANCHOR = (1075, 285)
 MARKET_ANCHOR = (770, 1150)
 
-plant_img = cv2.imread('templates/plants/wheat.png', cv2.IMREAD_UNCHANGED)
-plant_growing_img = cv2.imread('templates/plants/wheat_growing.png', cv2.IMREAD_UNCHANGED)
-planting_interface_img = cv2.imread('templates/interface/planting_wheat.png', cv2.IMREAD_UNCHANGED)
-field_img = cv2.imread('templates/environment/field.png', cv2.IMREAD_UNCHANGED)
-harvesting_interface_img = cv2.imread('templates/interface/harvest_scythe.png', cv2.IMREAD_UNCHANGED)
-boat_img = cv2.imread('templates/environment/boat.png', cv2.IMREAD_UNCHANGED)
-market_img = cv2.imread('templates/environment/market.png', cv2.IMREAD_UNCHANGED)
-sold_img = cv2.imread('templates/interface/sold.png', cv2.IMREAD_UNCHANGED)
-new_offer_img = cv2.imread('templates/interface/new_offer.png', cv2.IMREAD_UNCHANGED)
-plant_offer_img = cv2.imread('templates/interface/wheat_market.png', cv2.IMREAD_UNCHANGED)
-newspaper_img = cv2.imread('templates/interface/newspaper.png', cv2.IMREAD_UNCHANGED)
-insert_button_img = cv2.imread('templates/interface/insert_button.png', cv2.IMREAD_UNCHANGED)
-silo_img = cv2.imread('templates/interface/silo.png', cv2.IMREAD_UNCHANGED)
-close_img = cv2.imread('templates/interface/close.png', cv2.IMREAD_UNCHANGED)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+plant_img = cv2.imread(os.path.join(BASE_DIR, 'templates', 'plants', 'wheat.png'), cv2.IMREAD_UNCHANGED)
+plant_growing_img = cv2.imread(os.path.join(BASE_DIR, 'templates', 'plants', 'wheat_growing.png'), cv2.IMREAD_UNCHANGED)
+planting_interface_img = cv2.imread(os.path.join(BASE_DIR, 'templates', 'interface', 'planting_wheat.png'), cv2.IMREAD_UNCHANGED)
+field_img = cv2.imread(os.path.join(BASE_DIR, 'templates', 'environment', 'field.png'), cv2.IMREAD_UNCHANGED)
+harvesting_interface_img = cv2.imread(os.path.join(BASE_DIR, 'templates', 'interface', 'harvest_scythe.png'), cv2.IMREAD_UNCHANGED)
+boat_img = cv2.imread(os.path.join(BASE_DIR, 'templates', 'environment', 'boat.png'), cv2.IMREAD_UNCHANGED)
+market_img = cv2.imread(os.path.join(BASE_DIR, 'templates', 'environment', 'market.png'), cv2.IMREAD_UNCHANGED)
+sold_img = cv2.imread(os.path.join(BASE_DIR, 'templates', 'interface', 'sold.png'), cv2.IMREAD_UNCHANGED)
+new_offer_img = cv2.imread(os.path.join(BASE_DIR, 'templates', 'interface', 'new_offer.png'), cv2.IMREAD_UNCHANGED)
+plant_offer_img = cv2.imread(os.path.join(BASE_DIR, 'templates', 'interface', 'wheat_market.png'), cv2.IMREAD_UNCHANGED)
+newspaper_img = cv2.imread(os.path.join(BASE_DIR, 'templates', 'interface', 'newspaper.png'), cv2.IMREAD_UNCHANGED)
+insert_button_img = cv2.imread(os.path.join(BASE_DIR, 'templates', 'interface', 'insert_button.png'), cv2.IMREAD_UNCHANGED)
+silo_img = cv2.imread(os.path.join(BASE_DIR, 'templates', 'interface', 'silo.png'), cv2.IMREAD_UNCHANGED)
+close_img = cv2.imread(os.path.join(BASE_DIR, 'templates', 'interface', 'close.png'), cv2.IMREAD_UNCHANGED)
 
 
 class Bot:
@@ -60,12 +64,6 @@ class Bot:
         self.running = False
 
     def get_target(self):
-        screen_dim = {
-            'left': 0,
-            'top': 0,
-            'width': 1920,
-            'height': 1080
-        }
         with mss.mss() as sct:
             return np.array(sct.grab(screen_dim))
             # data = sct.grab(screen_dim)
@@ -111,6 +109,7 @@ class Bot:
         sleep(0.2)
         for (x, y) in path:
             if keyboard.is_pressed('q'):
+                pa.mouseUp()
                 return
             pa.moveTo(x, y, duration=0.75, _pause=False)
             sleep(0.75)
